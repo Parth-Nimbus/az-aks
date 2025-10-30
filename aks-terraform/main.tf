@@ -28,15 +28,11 @@ module "aks" {
   admin_group_object_id   = var.admin_group_object_id
 }
 
-resource "kubernetes_namespace" "dev" {
-  metadata {
-    name = "dev"
-  }
-}
+resource "kubernetes_namespace" "ns" {
+  for_each = toset(var.namespaces)
 
-resource "kubernetes_namespace" "prd" {
   metadata {
-    name = "prd"
+    name = each.key
   }
 }
 
