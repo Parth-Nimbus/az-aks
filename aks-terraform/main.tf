@@ -1,3 +1,22 @@
+terraform {
+  required_version = ">= 1.1.1"
+
+  # backend "azurerm" {
+  #   storage_account_name = "wjecommterraformprod"
+  #   container_name       = "tfstate"
+  #   key                  = "aks.tfstate"
+  # }
+  backend "local" {
+path = "state/terraform.tfstate"
+}
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=2.99.0"
+    }
+  }
+}
 data "azurerm_client_config" "current" {}
 
 module "az_service_principal" {
@@ -5,11 +24,21 @@ module "az_service_principal" {
   sp_name  = var.sp_name
 }
 
+module "resource_group" {
+  source                  = "./modules/resource_group"
+  resource_group_name     = var.resource_group_name
+  resource_group_location  = var.resource_group_location
+  tags          = {
+    environment = "production"
+    owner       = "platform-team"
+  }
+}
+
 module "az_keyvault" {
   source              = "./modules/az_keyvault"
   kv_name             = var.kv_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  location            = var.resource_group_location
+  resource_group_name = module.resource_group.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   object_id           = module.service_principal.sp_object_id
 }
