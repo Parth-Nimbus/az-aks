@@ -1,4 +1,4 @@
-variable "location" {
+variable "resource_group_location" {
   default = "East US"
 }
 
@@ -23,7 +23,7 @@ variable "dns_prefix" {
 }
 
 variable "node_count" {
-  default = 2
+  default = 1
 }
 
 variable "vm_size" {
@@ -40,4 +40,14 @@ variable "admin_group_object_id" {
 
 variable "azure_ad_group_name" {
   description = "Azure AD group name for RBAC binding"
+}
+
+variable "namespaces" {
+  type        = list(string)
+  description = "List of Kubernetes namespaces to create"
+}
+
+variable "enable_azure_policy" {
+  type    = bool
+  default = true
 }
