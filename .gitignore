@@ -1,0 +1,74 @@
+# Local backup folder (keep only locally)
+backup/
+
+# Terraform files (root level - now obsolete with environment structure)
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Environment-specific Terraform files
+environments/*/.terraform/
+environments/*/.terraform.lock.hcl
+environments/*/tfplan
+environments/*/terraform.tfstate*
+environments/*/crash.log
+environments/*/crash.*.log
+
+# Environment tfvars are committed, but ignore sensitive overrides
+environments/*/terraform.tfvars.local
+environments/*/secret.tfvars
+*.auto.tfvars
+
+# Backend configuration files (committed for reference)
+# backend-config.hcl
+# backend-*.hcl
+
+# Azure CLI
+.azure/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Infracost files
+.infracost/
+infracost.json
+**/infracost.json
+environments/*/plan.json
+# Keep usage files - they should be committed
+!environments/*/infracost-usage.yml
