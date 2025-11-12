@@ -6,6 +6,7 @@ backup/
 *.tfstate.*
 *.tfvars
 .terraform/
+aks-terraform/.terraform/
 .terraform.lock.hcl
 crash.log
 crash.*.log
