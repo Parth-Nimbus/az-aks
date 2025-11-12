@@ -2,6 +2,7 @@
 backup/
 
 # Terraform files (root level - now obsolete with environment structure)
+*.tfplan
 *.tfstate
 *.tfstate.*
 *.tfvars
