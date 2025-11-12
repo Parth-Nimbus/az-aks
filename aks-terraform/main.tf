@@ -90,8 +90,15 @@ resource "kubernetes_namespace" "ns" {
   }
 }
 
-module "az_aks_rbac" {
-  source              = "./modules/az_aks_rbac"
-  namespaces          = ["dev", "prd"]
-  all_security_group_ids  = values(module.aad_groups.security_group_ids)
-}
+locals { 
+    azure_devops_ad_group_name = one([ 
+      for key in keys(module.aad_groups.security_group_ids) : key  if strcontains(key, "devops") 
+    ])
+  }
+
+# module "az_aks_rbac" {
+#   source              = "./modules/az_aks_rbac"
+#   namespaces          = ["prd"]
+#   devops_ad_group_name = local.azure_devops_ad_group_name
+#   all_security_group_ids  = module.aad_groups.security_group_ids
+# }
