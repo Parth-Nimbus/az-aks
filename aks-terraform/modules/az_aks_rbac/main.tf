@@ -1,3 +1,7 @@
+# Get the security groups for the cluster
+# locals {
+#   all_security_group_ids = values(module.aad_security_groups.security_group_ids)
+# }
 resource "kubernetes_role" "namespace_admin" {
   for_each = toset(var.namespaces)
 
@@ -35,7 +39,9 @@ resource "kubernetes_role_binding" "namespace_admin_binding" {
 
   subject {
     kind      = "Group"
-    name      = var.azure_ad_group_name
+    # name      = var.azure_ad_group_name
+    name      = one([ for k, v in var.all_security_group_ids : k  if contains(k, "devops")
+                    ]) # Assuming the DevOps group is for ns-admin
     api_group = "rbac.authorization.k8s.io"
   }
 }
