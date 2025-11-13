@@ -65,6 +65,23 @@ module "aad_groups" {
 
 output "aad_group_ids" {
   value = module.aad_groups.security_group_ids
+module "resource_group" {
+  source                  = "./modules/resource_group"
+  resource_group_name     = var.resource_group_name
+  resource_group_location  = var.resource_group_location
+  tags          = {
+    environment = "production"
+    owner       = "platform-team"
+  }
+}
+
+module "az_keyvault" {
+  source              = "./modules/az_keyvault"
+  kv_name             = var.kv_name
+  location            = var.resource_group_location
+  resource_group_name = module.resource_group.name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+  object_id           = module.service_principal.sp_object_id
 }
 
 

@@ -71,3 +71,12 @@ variable "security_groups" {
 #     description = string
 #   }))
 # }
+variable "namespaces" {
+  type        = list(string)
+  description = "List of Kubernetes namespaces to create"
+}
+
+variable "enable_azure_policy" {
+  type    = bool
+  default = true
+}
