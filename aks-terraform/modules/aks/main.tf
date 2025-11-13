@@ -1,3 +1,8 @@
+# Get the security groups for the cluster
+# locals {
+#   all_security_group_ids = values(module.aad_security_groups.security_group_ids)
+# }
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.cluster_name
   location            = var.location
@@ -14,15 +19,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
-  service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
-  }
+  # service_principal {
+  #   client_id     = var.client_id
+  #   client_secret = var.client_secret
+  # }
 
   azure_active_directory_role_based_access_control {
-    managed                = true
-    azure_rbac_enabled     = false
-    admin_group_object_ids = [var.admin_group_object_id]
+    azure_rbac_enabled     = true
+    admin_group_object_ids = values(var.all_security_group_ids)
   }
 
   kubernetes_version = var.kubernetes_version
