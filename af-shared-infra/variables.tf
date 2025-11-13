@@ -1,4 +1,9 @@
 # --- Root Variables ---
+variable "resource_prefix" {
+  description = "A prefix for naming resources."
+  type        = string
+}
+
 variable "resource_group_name" {
   description = "The name of the main resource group."
   type        = string
