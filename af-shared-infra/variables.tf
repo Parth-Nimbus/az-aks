@@ -12,10 +12,10 @@ variable "location" {
   description = "The Azure region (e.g., eastus)."
   type        = string
 }
-variable "tenant_id" {
-  description = "Your Azure Active Directory Tenant ID."
-  type        = string
-}
+# variable "tenant_id" {
+#   description = "Your Azure Active Directory Tenant ID."
+#   type        = string
+# }
 variable "key_vault_name" {
   description = "Globally unique name for the Key Vault."
   type        = string
