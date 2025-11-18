@@ -19,15 +19,22 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
+ 
+
   # service_principal {
   #   client_id     = var.client_id
   #   client_secret = var.client_secret
   # }
+  # role_based_access_control {
+  #       enabled = true
+  #     }
 
   azure_active_directory_role_based_access_control {
-    azure_rbac_enabled     = true
-    admin_group_object_ids = values(var.all_security_group_ids)
+    azure_rbac_enabled   = true
+    #admin_group_object_ids  = values(var.all_security_group_ids)
+    admin_group_object_ids  = values(var.all_security_group_ids)
   }
+
 
   kubernetes_version = var.kubernetes_version
 }

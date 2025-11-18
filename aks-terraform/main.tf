@@ -25,12 +25,37 @@ data "azurerm_client_config" "current" {}
 #   sp_name  = var.sp_name
 # }
 
+# module "az_keyvault" {
+#   source              = "./modules/az_keyvault"
+#   kv_name             = var.kv_name
+#   location            = var.resource_group_location
+#   resource_group_name = module.resource_group.name
+#   tenant_id           = data.azurerm_client_config.current.tenant_id
+#   object_id           = module.service_principal.sp_object_id
+# }
+
+locals {
+  aad_groups_map = {
+    for group in var.security_groups :
+    "${var.resource_prefix}-${group.name}-${terraform.workspace}" => group
+  }
+}
+
+module "aad_groups" {
+  source = "./modules/aad_security_groups"
+  aad_security_groups = values(local.aad_groups_map)
+}
+
+output "aad_group_ids" {
+  value = module.aad_groups.security_group_ids
+}
+
 module "resource_group" {
   source                  = "./modules/resource_group"
-  resource_group_name     = var.resource_group_name
+  resource_group_name     = "${var.resource_prefix}-${var.resource_group_name}-${terraform.workspace}"
   resource_group_location  = var.resource_group_location
   tags          = {
-    environment = "prod"
+    environment = "production"
     owner       = "platform-team"
   }
 }
@@ -44,52 +69,12 @@ module "resource_group" {
 #   object_id           = module.service_principal.sp_object_id
 # }
 
-module "aad_groups" {
-  source = "./modules/aad_security_groups"
-
-  security_groups = [
-    {
-      name        = "AKS-Admins"
-      description = "Cluster administrators"
-    },
-    {
-      name        = "AKS-DevOps"
-      description = "DevOps team for AKS"
-    },
-    {
-      name        = "AKS-Viewers"
-      description = "Read-only access to AKS"
-    }
-  ]
-}
-
-output "aad_group_ids" {
-  value = module.aad_groups.security_group_ids
-module "resource_group" {
-  source                  = "./modules/resource_group"
-  resource_group_name     = var.resource_group_name
-  resource_group_location  = var.resource_group_location
-  tags          = {
-    environment = "production"
-    owner       = "platform-team"
-  }
-}
-
-module "az_keyvault" {
-  source              = "./modules/az_keyvault"
-  kv_name             = var.kv_name
-  location            = var.resource_group_location
-  resource_group_name = module.resource_group.name
-  tenant_id           = data.azurerm_client_config.current.tenant_id
-  object_id           = module.service_principal.sp_object_id
-}
-
 
 module "aks" {
   source                  = "./modules/aks"
   cluster_name            = var.cluster_name
   location                = var.resource_group_location
-  resource_group_name     = var.resource_group_name
+  resource_group_name     = module.resource_group.resource_group_name
   dns_prefix              = var.dns_prefix
   node_count              = var.node_count
   vm_size                 = var.vm_size

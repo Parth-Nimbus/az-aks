@@ -3,8 +3,8 @@ cluster_name = "af-aks-cluster"
 # resource_group_location = [
 
 # ]
-
-resource_group_name = "af-aks-resource-group"
+resource_prefix = "af-nonprod"
+resource_group_name = "rg"
 #kv_name = "af-aks-keyvault"
 sp_name = "af-aks-service-principal"
 namespaces = ["dev", "tst"]
@@ -35,15 +35,15 @@ kubernetes_version = "1.32.6"
 # ]
 security_groups = [
   {
-    name        = "af-aks-admins"
+    name        = "aks-admins"
     description = "Cluster administrators with full access"
   },
   {
-    name        = "af-aks-devops"
+    name        = "aks-devops"
     description = "DevOps team responsible for CI/CD and infra"
   },
   {
-    name        = "af-aks-viewers"
+    name        = "aks-viewers"
     description = "Read-only access to AKS resources"
   }
 ]
